@@ -1,0 +1,161 @@
+"Preliminary data release date: March 2022
+Preliminary data revised release date: May 2022
+Final data release date: March 2023",Unnamed: 1,Unnamed: 2,Unnamed: 3,Unnamed: 4,Unnamed: 5,Unnamed: 6,Unnamed: 7,region,division,total_cap_ac_x,total_cap_dc_x,total_cap_ac_y,total_cap_dc_y
+"Table HC11.1  Household energy insecurity, 2020",,,,,,,,,,,,,
+,Number of housing units (million),,,,,,,,,,,,
+,,Households reporting…,,,,,,,,,,,
+,Total U.S.a,Any household energy insecurityb,Reducing or forgoing food or medicine to pay energy costs,Leaving home at unhealthy temperature,Receiving disconnect or delivery stop notice,Unable to use heating equipmentc,Unable to use air-conditioning equipmentd,,,,,,
+All homes,123.53,33.58,24.61,12.2,12.36,4.93,6.35,,,,,,
+Census region and division,,,,,,,,,,,,,
+Northeast,21.92,5.54,3.82,2.38,1.84,0.79,0.84,Northeast,,4012.35,5244.87,,
+New England,5.88,1.36,0.93,0.57,0.42,0.25,0.19,Northeast,New England,4012.35,5244.87,1917.03,2573.19
+Middle Atlantic,16.04,4.17,2.89,1.81,1.43,0.54,0.65,Northeast,Middle Atlantic,4012.35,5244.87,2095.32,2671.68
+Midwest,27.04,6.58,4.87,2.01,2.8,0.94,1.04,Midwest,,4273.99,5603.29,,
+East North Central,18.55,4.78,3.52,1.46,2.01,0.63,0.74,Midwest,East North Central,4273.99,5603.29,2846.23,3694.19
+West North Central,8.5,1.8,1.35,0.55,0.79,0.31,0.3,Midwest,West North Central,4273.99,5603.29,1427.76,1909.1
+South,46.84,14,10.66,4.65,5.69,2.09,3.11,South,,34053.03,44672.22,,
+South Atlantic,24.84,6.58,4.99,2.26,2.68,0.96,1.5,South,South Atlantic,34053.03,44672.22,21566.52,28542.87
+East South Central,7.38,2.38,1.85,0.85,0.98,0.38,0.58,South,East South Central,34053.03,44672.22,1447.18,1858.65
+West South Central,14.62,5.03,3.83,1.53,2.03,0.74,1.03,South,West South Central,34053.03,44672.22,11039.33,14270.7
+West,27.72,7.46,5.25,3.16,2.02,1.12,1.36,West,,27720.71,34833.46,,
+Mountain,9.22,2.26,1.65,0.86,0.75,0.39,0.45,West,Mountain,27720.71,34833.46,10567.8,13273.76
+Mountain North,4.62,1.01,0.74,0.32,0.38,0.15,0.18,West,Mountain,27720.71,34833.46,10567.8,13273.76
+Mountain South,4.6,1.25,0.91,0.54,0.37,0.24,0.28,West,Mountain,27720.71,34833.46,10567.8,13273.76
+Pacific,18.51,5.2,3.6,2.3,1.27,0.73,0.9,West,Pacific,27720.71,34833.46,17152.91,21559.7
+Census urban/rural classificatione,,,,,,,,,,,,,
+Urban,100.44,28.04,20.54,10.27,10.32,3.93,5.31,,,,,,
+Urbanized area,89.24,24.86,18.19,9.14,9.04,3.47,4.81,,,,,,
+Urban cluster,11.2,3.18,2.35,1.13,1.28,0.45,0.5,,,,,,
+Rural,23.09,5.54,4.06,1.93,2.04,1.01,1.03,,,,,,
+Climate regionf,,,,,,,,,,,,,
+Very-cold/Cold,42.5,10.02,7.23,3.51,3.82,1.36,1.43,,,,,,
+Mixed-humid,36.79,10.51,7.74,3.81,4.21,1.66,2.26,,,,,,
+Mixed-dry/Hot-dry,15.06,4.75,3.41,2.05,1.29,0.77,0.98,,,,,,
+Hot-humid,22.31,6.72,5.19,2.11,2.68,0.99,1.5,,,,,,
+Marine,6.87,1.58,1.03,0.71,0.36,0.16,0.17,,,,,,
+Housing unit type,,,,,,,,,,,,,
+Single-family detached,77.07,17.09,11.93,5.89,6.33,2.77,3.75,,,,,,
+Single-family attached,7.45,2.1,1.57,0.8,0.76,0.25,0.34,,,,,,
+Apartments in buildings with 2–4 units,9.34,4.19,3.32,1.61,1.55,0.52,0.59,,,,,,
+Apartments in buildings with 5 or more units,22.84,7,5.27,2.75,2.27,0.61,0.88,,,,,,
+Mobile homes,6.83,3.21,2.51,1.15,1.45,0.78,0.79,,,,,,
+Year of construction,,,,,,,,,,,,,
+Before 1950,20.26,5.96,4.16,2.43,2.26,1.08,1.04,,,,,,
+1950 to 1959,12.48,3.7,2.6,1.39,1.31,0.61,0.81,,,,,,
+1960 to 1969,12.76,3.92,2.92,1.29,1.52,0.51,0.72,,,,,,
+1970 to 1979,18.34,5.48,4.21,2.05,1.97,0.69,0.94,,,,,,
+1980 to 1989,16.3,4.52,3.32,1.82,1.72,0.74,0.89,,,,,,
+1990 to 1999,17.16,4.08,3.02,1.31,1.51,0.66,0.92,,,,,,
+2000 to 2009,16.16,3.61,2.66,1.11,1.22,0.38,0.75,,,,,,
+2010 to 2015,5.53,1.34,1.01,0.47,0.52,0.16,0.21,,,,,,
+2016 to 2020,4.56,0.96,0.72,0.33,0.33,0.09,0.06,,,,,,
+Main heating fuel and equipment,,,,,,,,,,,,,
+Natural gas,62.71,15.28,10.8,5.33,5.45,1.99,2.99,,,,,,
+Electricity,42.57,13.21,10.02,4.64,5.2,1.61,2.45,,,,,,
+Fuel oil or kerosene,4.93,1.19,0.79,0.54,0.45,0.3,0.18,,,,,,
+Propane,5.21,1.15,0.9,0.42,0.35,0.28,0.13,,,,,,
+Wood,2.25,0.52,0.38,0.27,0.14,0.18,0.1,,,,,,
+Some other fuelg,Q,Q,Q,Q,Q,N,N,,,,,,
+Does not use heating equipment,5.79,2.21,1.71,1,0.76,0.57,0.49,,,,,,
+Main heating equipment (including all fuels),,,,,,,,,,,,,
+Central warm-air furnace,74.42,18.55,13.51,6.13,7.23,2.59,3.71,,,,,,
+Heat pump,16.13,4.17,3.27,1.34,1.59,0.37,0.73,,,,,,
+Steam or hot water system,9.29,2.4,1.53,1.09,0.72,0.39,0.37,,,,,,
+Ductless heat pump (mini-split),1.06,0.29,0.18,0.1,Q,Q,Q,,,,,,
+Built-in electric units,7.65,2.47,1.8,1.06,0.84,0.22,0.32,,,,,,
+Built-in oil or gas room heater,3.49,1.33,1.04,0.52,0.4,0.27,0.18,,,,,,
+Portable electric heaters,3.03,1.54,1.16,0.68,0.57,0.31,0.38,,,,,,
+Heating stove burning wood,1.94,0.45,0.31,0.23,0.11,0.16,0.08,,,,,,
+Some other equipment,0.74,0.16,0.11,Q,0.07,Q,Q,,,,,,
+Does not use heating equipment,5.79,2.21,1.71,1,0.76,0.57,0.49,,,,,,
+Air-conditioning equipment,,,,,,,,,,,,,
+Uses air-conditioning equipment,109.51,28.48,21,9.97,10.7,4.03,5.7,,,,,,
+Does not use air-conditioning equipment,14.02,5.1,3.61,2.23,1.66,0.9,0.65,,,,,,
+Main type of air-conditioning equipment used ,,,,,,,,,,,,,
+Central air-conditioning equipment (including central heat pump),82.69,18.37,13.5,5.91,7.05,2.37,3.75,,,,,,
+Ductless heat pump (mini-split),1.76,0.34,0.19,0.14,0.14,0.08,0.1,,,,,,
+Window or wall air conditioner,21.43,8.43,6.36,3.33,3.13,1.38,1.52,,,,,,
+Portable air conditioner,2.68,0.96,0.66,0.41,0.29,0.16,0.23,,,,,,
+Evaporative or swamp cooler,0.95,0.38,0.29,0.18,0.09,Q,0.09,,,,,,
+Does not use air-conditioning equipment,14.02,5.1,3.61,2.23,1.66,0.9,0.65,,,,,,
+Adequacy of insulation,,,,,,,,,,,,,
+Well insulated,34.34,6.58,4.9,2,2.17,0.74,1.07,,,,,,
+Adequately insulated,64.27,15.34,11.13,4.8,5.6,1.77,2.89,,,,,,
+Poorly insulated,21.29,9.8,7.17,4.48,3.98,2.01,2,,,,,,
+No insulation,3.63,1.85,1.41,0.92,0.61,0.41,0.38,,,,,,
+Type of glass in windows,,,,,,,,,,,,,
+Single-pane glass,43.51,15.97,11.93,6.07,6.24,2.61,3.03,,,,,,
+Double-pane glass,77.95,17.25,12.44,5.93,6.04,2.27,3.25,,,,,,
+Triple-pane glass,2.07,0.35,0.24,0.2,0.07,Q,0.07,,,,,,
+Number of household members,,,,,,,,,,,,,
+1 member,33.59,8.52,6.07,3.66,2.62,1.07,1.2,,,,,,
+2 members,45.31,9.56,6.7,3.64,3.15,1.26,1.86,,,,,,
+3 members,18.27,5.87,4.42,1.85,2.18,0.95,1.02,,,,,,
+4 members,15.56,5.08,3.91,1.61,2.1,0.69,1.09,,,,,,
+5 members,6.44,2.45,1.93,0.75,1.22,0.52,0.62,,,,,,
+6 or more members,4.37,2.08,1.59,0.68,1.09,0.45,0.56,,,,,,
+2020 annual household income,,,,,,,,,,,,,
+"Less than $5,000",4.48,2.6,2.1,1.11,1.19,0.5,0.54,,,,,,
+"$5,000 to $9,999",4.01,2.25,1.87,0.85,0.78,0.38,0.32,,,,,,
+"$10,000 to $19,999",10.25,4.8,3.86,2.12,1.86,0.82,0.88,,,,,,
+"$20,000 to $39,999",24.07,9.56,7.54,3.6,3.46,1.52,1.97,,,,,,
+"$40,000 to $59,999",19.61,5.74,4.22,1.75,2.25,0.83,1.14,,,,,,
+"$60,000 to $99,999",27.71,5.57,3.56,1.57,1.94,0.56,0.92,,,,,,
+"$100,000 to $149,999",16.54,1.84,1.01,0.68,0.62,0.2,0.34,,,,,,
+"$150,000 or more",16.86,1.22,0.44,0.52,0.26,0.14,0.24,,,,,,
+Payment method for energy bills,,,,,,,,,,,,,
+All paid by household,112.7,30.36,22.29,10.92,11.57,4.43,5.89,,,,,,
+Some paid by household; some included in rent or condo fee,4.34,1.01,0.57,0.47,0.18,0.13,0.12,,,,,,
+All included in rent or condo fee,0.72,0.16,0.13,Q,Q,Q,Q,,,,,,
+Some other method,5.77,2.04,1.61,0.74,0.6,0.35,0.31,,,,,,
+Householder 60 or olderh,,,,,,,,,,,,,
+Yes,52.11,10,6.93,4.38,2.77,1.41,1.89,,,,,,
+No,71.42,23.57,17.67,7.81,9.59,3.53,4.46,,,,,,
+Children under 18 in household,,,,,,,,,,,,,
+Yes,34.58,12.88,10.02,3.97,5.9,2.25,2.81,,,,,,
+No,88.95,20.69,14.59,8.22,6.46,2.69,3.54,,,,,,
+Ethnicity of householderh,,,,,,,,,,,,,
+Hispanic or Latino,13.99,6.57,5.14,2.4,2.24,0.92,1.19,,,,,,
+Not Hispanic or Latino,109.54,27.01,19.47,9.79,10.12,4.02,5.15,,,,,,
+"Race of householderh,i",,,,,,,,,,,,,
+White alone,99.99,23.17,16.78,8.47,8.02,3.23,4.28,,,,,,
+Hispanic or Latino,12.04,5.52,4.43,2.02,1.87,0.76,1,,,,,,
+Not Hispanic or Latino,87.94,17.66,12.35,6.44,6.15,2.47,3.28,,,,,,
+Black or African American alone,12.95,6.73,5.21,2.26,3.37,1.23,1.42,,,,,,
+Hispanic or Latino,0.63,0.35,0.26,0.11,0.14,Q,Q,,,,,,
+Not Hispanic or Latino,12.32,6.39,4.95,2.15,3.23,1.16,1.34,,,,,,
+Asian alone,6.06,1.53,1.03,0.75,0.21,0.18,0.26,,,,,,
+American Indian or Alaska Native alone,1.08,0.56,0.41,0.17,0.19,0.11,0.07,,,,,,
+Native Hawaiian or Other Pacific Islander alone,0.35,0.15,0.12,Q,Q,Q,Q,,,,,,
+More than one race,3.1,1.43,1.06,0.51,0.53,0.18,0.31,,,,,,
+Ownership of housing unitj,,,,,,,,,,,,,
+Owned,82.92,16.92,11.76,5.99,5.49,2.84,3.83,,,,,,
+Rented,40.61,16.66,12.84,6.2,6.87,2.09,2.52,,,,,,
+,,,,,,,,,,,,,
+"Data source: U.S. Energy Information Administration, Office of Energy Demand and Integrated Statistics, Form EIA-457A of the 2020 Residential Energy Consumption Survey
+Notes:  Because of rounding, data may not sum to totals.  See RECS Terminology for the definitions of terms used in these tables.
+a Total U.S. includes all primary occupied housing units in the 50 states and the District of Columbia. Vacant housing units, seasonal units, second homes, military houses, and group quarters are excluded.
+b Household energy insecurity as defined in this table includes only those issues collected as part of the RECS questionnaire. Other factors, such as energy costs as a percentage of household income, could be considered as household energy insecurity, but they are not included here. Respondents may report more than one energy insecurity issue.
+c Includes inability to use main heating equipment at any time during the previous 12 months because equipment was broken and household could not have it repaired or because of an electricity, natural gas, or bulk fuel disruption due to lack of payment.
+d Includes inability to use air-conditoning equipment at any time during the previous 12 months because equipment was broken and household could not have it repaired or because of an electricity disruption due to lack of payment.
+e Housing units are classified using criteria created by the U.S. Census Bureau based on 2010 Census data. Urbanized areas are densely settled groupings of blocks or tracts with 50,000 or more people, while urban clusters have at least 2,500 but less than 50,000 people. All other areas are rural.
+f The Building America program, sponsored by the U.S. Department of Energy’s Office of Energy Efficiency and Renewable Energy (EERE), created these climate regions. We combined climate regions for this publication. The Subarctic region is included with data for Very-cold/Cold. 
+g Some other fuel includes coal and district steam.
+h These characteristics refer to the householder that completed the RECS questionnaire.  
+i Householders could select more than one racial category to describe themselves. These householders are only included as more than one race.        
+j Rent includes households that occupy their primary housing units without paying rent.
+Q = Data withheld because either the relative standard error (RSE) was greater than 50% or fewer than 10 households were in the reporting sample.
+N = No households in reporting sample.",,,,,,,,,"Data source: U.S. Energy Information Administration, Office of Energy Demand and Integrated Statistics, Form EIA-457A of the 2020 Residential Energy Consumption Survey
+Notes:  Because of rounding, data may not sum to totals.  See RECS Terminology for the definitions of terms used in these tables.
+a Total U.S. includes all primary occupied housing units in the 50 states and the District of Columbia. Vacant housing units, seasonal units, second homes, military houses, and group quarters are excluded.
+b Household energy insecurity as defined in this table includes only those issues collected as part of the RECS questionnaire. Other factors, such as energy costs as a percentage of household income, could be considered as household energy insecurity, but they are not included here. Respondents may report more than one energy insecurity issue.
+c Includes inability to use main heating equipment at any time during the previous 12 months because equipment was broken and household could not have it repaired or because of an electricity, natural gas, or bulk fuel disruption due to lack of payment.
+d Includes inability to use air-conditoning equipment at any time during the previous 12 months because equipment was broken and household could not have it repaired or because of an electricity disruption due to lack of payment.
+e Housing units are classified using criteria created by the U.S. Census Bureau based on 2010 Census data. Urbanized areas are densely settled groupings of blocks or tracts with 50,000 or more people, while urban clusters have at least 2,500 but less than 50,000 people. All other areas are rural.
+f The Building America program, sponsored by the U.S. Department of Energy’s Office of Energy Efficiency and Renewable Energy (EERE), created these climate regions. We combined climate regions for this publication. The Subarctic region is included with data for Very-cold/Cold. 
+g Some other fuel includes coal and district steam.
+h These characteristics refer to the householder that completed the RECS questionnaire.  
+i Householders could select more than one racial category to describe themselves. These householders are only included as more than one race.        
+j Rent includes households that occupy their primary housing units without paying rent.
+Q = Data withheld because either the relative standard error (RSE) was greater than 50% or fewer than 10 households were in the reporting sample.
+N = No households in reporting sample.",,,,
