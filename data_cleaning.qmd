@@ -1,0 +1,92 @@
+---
+title: "Final Project"
+author: "Clarice Tee, Eddie Andujar, Prashanthi Subbiah"
+date: Nov 23, 2024
+format: 
+  pdf:
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+include-before-body:
+  text: |
+    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+      showspaces = false,
+      showtabs = false,
+      breaksymbolleft={},
+      breaklines
+    }
+---
+```{python}
+import pyarrow
+import pandas as pd
+import numpy as np
+```
+
+Loading Data
+```{python}
+# Step 1: Load the datasets
+energy_insecurity_df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC 11.1.xlsx")
+solar_pv_df = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\uspvdbCSV\uspvdb_v2_0_20240801.csv")
+```
+
+
+```{python}
+# Step 2: Clean and prepare the PV dataset
+pv_clean = solar_pv_df[['case_id', 'p_state', 'ylat', 'xlong', 'p_year', 'p_cap_ac', 'p_cap_dc']]
+
+# Step 3: Create a dictionary mapping states to regions and divisions
+state_to_region = {
+    'CT': 'Northeast', 'ME': 'Northeast', 'MA': 'Northeast', 'NH': 'Northeast', 'RI': 'Northeast', 'VT': 'Northeast',
+    'NJ': 'Northeast', 'NY': 'Northeast', 'PA': 'Northeast',
+    'IL': 'Midwest', 'IN': 'Midwest', 'MI': 'Midwest', 'OH': 'Midwest', 'WI': 'Midwest',
+    'IA': 'Midwest', 'KS': 'Midwest', 'MN': 'Midwest', 'MO': 'Midwest', 'NE': 'Midwest', 'ND': 'Midwest', 'SD': 'Midwest',
+    'DE': 'South', 'FL': 'South', 'GA': 'South', 'MD': 'South', 'NC': 'South', 'SC': 'South', 'VA': 'South', 'WV': 'South', 'DC': 'South',
+    'AL': 'South', 'KY': 'South', 'MS': 'South', 'TN': 'South',
+    'AR': 'South', 'LA': 'South', 'OK': 'South', 'TX': 'South',
+    'AZ': 'West', 'CO': 'West', 'ID': 'West', 'MT': 'West', 'NV': 'West', 'NM': 'West', 'UT': 'West', 'WY': 'West',
+    'AK': 'West', 'CA': 'West', 'HI': 'West', 'OR': 'West', 'WA': 'West'
+}
+
+state_to_division = {
+    'CT': 'New England', 'ME': 'New England', 'MA': 'New England', 'NH': 'New England', 'RI': 'New England', 'VT': 'New England',
+    'NJ': 'Middle Atlantic', 'NY': 'Middle Atlantic', 'PA': 'Middle Atlantic',
+    'IL': 'East North Central', 'IN': 'East North Central', 'MI': 'East North Central', 'OH': 'East North Central', 'WI': 'East North Central',
+    'IA': 'West North Central', 'KS': 'West North Central', 'MN': 'West North Central', 'MO': 'West North Central',
+    'NE': 'West North Central', 'ND': 'West North Central', 'SD': 'West North Central',
+    'DE': 'South Atlantic', 'FL': 'South Atlantic', 'GA': 'South Atlantic', 'MD': 'South Atlantic', 'NC': 'South Atlantic',
+    'SC': 'South Atlantic', 'VA': 'South Atlantic', 'WV': 'South Atlantic', 'DC': 'South Atlantic',
+    'AL': 'East South Central', 'KY': 'East South Central', 'MS': 'East South Central', 'TN': 'East South Central',
+    'AR': 'West South Central', 'LA': 'West South Central', 'OK': 'West South Central', 'TX': 'West South Central',
+    'AZ': 'Mountain', 'CO': 'Mountain', 'ID': 'Mountain', 'MT': 'Mountain', 'NV': 'Mountain', 'NM': 'Mountain', 'UT': 'Mountain', 'WY': 'Mountain',
+    'AK': 'Pacific', 'CA': 'Pacific', 'HI': 'Pacific', 'OR': 'Pacific', 'WA': 'Pacific'
+}
+
+# Step 4: Add region and division columns to the PV dataset
+pv_clean['region'] = pv_clean['p_state'].map(state_to_region)
+pv_clean['division'] = pv_clean['p_state'].map(state_to_division)
+
+# Step 5: Aggregate PV data by region and division
+pv_agg_region = pv_clean.groupby('region').agg({
+    'case_id': 'count',
+    'p_cap_ac': 'sum',
+    'p_cap_dc': 'sum'
+}).reset_index()
+
+pv_agg_division = pv_clean.groupby('division').agg({
+    'case_id': 'count',
+    'p_cap_ac': 'sum',
+    'p_cap_dc': 'sum'
+}).reset_index()
+
+# Step 6: Rename columns for clarity
+pv_agg_region.columns = ['region', 'facility_count', 'total_cap_ac', 'total_cap_dc']
+pv_agg_division.columns = ['division', 'facility_count', 'total_cap_ac', 'total_cap_dc']
+
+# Step 7: Save the results
+pv_clean.to_csv('pv_data_with_regions.csv', index=False)
+pv_agg_region.to_csv('pv_data_aggregated_by_region.csv', index=False)
+pv_agg_division.to_csv('pv_data_aggregated_by_division.csv', index=False)
+
+print("Data processing complete. Check the output CSV files.")
+```
