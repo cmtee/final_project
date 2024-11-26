@@ -21,6 +21,7 @@ include-before-body:
 import pyarrow
 import pandas as pd
 import numpy as np
+import os
 ```
 
 Loading Data
@@ -28,14 +29,17 @@ Loading Data
 # Step 1: Load the datasets
 energy_insecurity_df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC 11.1.xlsx")
 solar_pv_df = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\uspvdbCSV\uspvdb_v2_0_20240801.csv")
+
+output_dir = r'C:\Users\clari\OneDrive\Documents\Python II\final_project'
 ```
 
 
 ```{python}
 # Step 2: Clean and prepare the PV dataset
-pv_clean = solar_pv_df[['case_id', 'p_state', 'ylat', 'xlong', 'p_year', 'p_cap_ac', 'p_cap_dc']]
+columns_to_keep = ['case_id', 'p_state', 'ylat', 'xlong', 'p_year', 'p_cap_ac', 'p_cap_dc']
+pv_clean = solar_pv_df[columns_to_keep].copy()
 
-# Step 3: Create a dictionary mapping states to regions and divisions
+# Step 3: Create dictionaries mapping states to regions and divisions
 state_to_region = {
     'CT': 'Northeast', 'ME': 'Northeast', 'MA': 'Northeast', 'NH': 'Northeast', 'RI': 'Northeast', 'VT': 'Northeast',
     'NJ': 'Northeast', 'NY': 'Northeast', 'PA': 'Northeast',
@@ -66,6 +70,9 @@ state_to_division = {
 pv_clean['region'] = pv_clean['p_state'].map(state_to_region)
 pv_clean['division'] = pv_clean['p_state'].map(state_to_division)
 
+```
+```{python}
+
 # Step 5: Aggregate PV data by region and division
 pv_agg_region = pv_clean.groupby('region').agg({
     'case_id': 'count',
@@ -80,13 +87,77 @@ pv_agg_division = pv_clean.groupby('division').agg({
 }).reset_index()
 
 # Step 6: Rename columns for clarity
-pv_agg_region.columns = ['region', 'facility_count', 'total_cap_ac', 'total_cap_dc']
-pv_agg_division.columns = ['division', 'facility_count', 'total_cap_ac', 'total_cap_dc']
+pv_agg_region = pv_agg_region.rename(columns={
+    'case_id': 'facility_count',
+    'p_cap_ac': 'total_cap_ac',
+    'p_cap_dc': 'total_cap_dc'
+})
+
+pv_agg_division = pv_agg_division.rename(columns={
+    'case_id': 'facility_count',
+    'p_cap_ac': 'total_cap_ac',
+    'p_cap_dc': 'total_cap_dc'
+})
 
 # Step 7: Save the results
-pv_clean.to_csv('pv_data_with_regions.csv', index=False)
-pv_agg_region.to_csv('pv_data_aggregated_by_region.csv', index=False)
-pv_agg_division.to_csv('pv_data_aggregated_by_division.csv', index=False)
+pv_clean.to_csv(os.path.join(output_dir, 'pv_data_regions_divisions.csv'), index=False)
+pv_agg_region.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_region.csv'), index=False)
+pv_agg_division.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_division.csv'), index=False)
 
-print("Data processing complete. Check the output CSV files.")
+print(f"Data processing complete. Check the output CSV files in {output_dir}")
+```
+
+
+```{python}
+# Print the column names to verify the structure
+print("Columns in the energy insecurity dataset:")
+print(energy_insecurity_df.columns)
+
+# First, let's create new region and division columns
+energy_insecurity_df['region'] = None
+energy_insecurity_df['division'] = None
+
+# Map the regions and divisions based on the actual data structure
+regions = ['Northeast', 'Midwest', 'South', 'West']
+for idx, row in energy_insecurity_df.iterrows():
+    # Use the first column name since it contains the region/division information
+    location = row.iloc[0]  # Get the first column value
+    if pd.notna(location):  # Check if the value is not NaN
+        if location in regions:
+            energy_insecurity_df.at[idx, 'region'] = location
+        else:
+            # Find the parent region for each division
+            if location.strip() in ['New England', 'Middle Atlantic']:
+                energy_insecurity_df.at[idx, 'region'] = 'Northeast'
+            elif location.strip() in ['East North Central', 'West North Central']:
+                energy_insecurity_df.at[idx, 'region'] = 'Midwest'
+            elif location.strip() in ['South Atlantic', 'East South Central', 'West South Central']:
+                energy_insecurity_df.at[idx, 'region'] = 'South'
+            elif location.strip() in ['Mountain', 'Pacific', 'Mountain North', 'Mountain South']:
+                energy_insecurity_df.at[idx, 'region'] = 'West'
+            energy_insecurity_df.at[idx, 'division'] = location.strip()
+
+# Merge Mountain North and South into Mountain
+energy_insecurity_df['division'] = energy_insecurity_df['division'].replace({
+    'Mountain North': 'Mountain',
+    'Mountain South': 'Mountain'
+})
+
+# Save the cleaned data
+output_file = os.path.join(output_dir, "HC_11.1_cleaned.xlsx")
+energy_insecurity_df.to_excel(output_file, index=False)
+print(f"Cleaned energy insecurity data saved to {output_file}")
+
+# Print unique values to verify the cleaning
+print("\nUnique regions after cleaning:")
+print(energy_insecurity_df['region'].unique())
+print("\nUnique divisions after cleaning:")
+print(energy_insecurity_df['division'].unique())
+    
+```
+
+Now, we want to merge the two datasets
+
+```{python}
+
 ```
