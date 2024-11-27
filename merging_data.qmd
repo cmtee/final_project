@@ -1,0 +1,67 @@
+---
+title: "Final Project"
+author: "Clarice Tee, Eddie Andujar, Prashanthi Subbiah"
+date: Nov 23, 2024
+format: 
+  pdf:
+    include-in-header: 
+       text: |
+         \usepackage{fvextra}
+         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+include-before-body:
+  text: |
+    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+      showspaces = false,
+      showtabs = false,
+      breaksymbolleft={},
+      breaklines
+    }
+---
+
+Now, we want to merge the two datasets
+
+```{python}
+import pandas as pd
+import os
+```
+```{python}
+# Set the directory path
+dir_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
+
+# Load the Excel file
+excel_file = os.path.join(dir_path, 'HC_11.1_cleaned.xlsx')
+hc_data = pd.read_excel(excel_file)
+
+# Load the CSV files
+region_file = os.path.join(dir_path, 'pv_data_aggregated_by_region_2020.csv')
+division_file = os.path.join(dir_path, 'pv_data_aggregated_by_division_2020.csv')
+pv_region_data = pd.read_csv(region_file)
+pv_division_data = pd.read_csv(division_file)
+
+# Function to match and merge data
+def match_and_merge(hc_df, pv_df, key):
+    merged = hc_df.merge(pv_df, left_on=key, right_on=key, how='left')
+    return merged
+
+# Match and merge region data
+hc_data_with_region = match_and_merge(hc_data, pv_region_data, 'region')
+
+# Match and merge division data
+hc_data_with_all = match_and_merge(hc_data_with_region, pv_division_data, 'division')
+
+# Rename columns to avoid confusion
+hc_data_with_all = hc_data_with_all.rename(columns={
+    'facility_count_x': 'facility_count_region',
+    'total_cap_ac_x': 'total_cap_ac_region',
+    'total_cap_dc_x': 'total_cap_dc_region',
+    'facility_count_y': 'facility_count_division',
+    'total_cap_ac_y': 'total_cap_ac_division',
+    'total_cap_dc_y': 'total_cap_dc_division'
+})
+
+# Save the result to a new Excel file
+output_file = os.path.join(dir_path, 'HC_11.1_with_PV_data.xlsx')
+hc_data_with_all.to_excel(output_file, index=False)
+
+print(f"Data matching complete. Results saved to {output_file}")
+```
