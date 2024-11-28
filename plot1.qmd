@@ -1,0 +1,126 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{python}
+import pandas as pd
+import altair as alt
+from vega_datasets import data
+import json
+# Load US states/divisions topology
+states = alt.topo_feature(data.us_10m.url, 'states')
+# Read the CSV file
+df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC_11.1_with_PV_data.xlsx")
+```
+
+```{python}
+# Example dataset
+data_dict = {
+    "region": ["Northeast", "Midwest", "South", "West"],
+    "any_household_energy_insecurity": [3.69, 3.25, 4.66, 2.98],
+    "total_cap_dc_region": [639.3, 687.3, 9848.64, 4006.8]
+}
+
+df = pd.DataFrame(data_dict)
+
+# State-to-region mapping (FIPS codes based on U.S. GeoJSON)
+state_region_mapping = {
+    23: 'Northeast', 25: 'Northeast', 33: 'Northeast', 44: 'Northeast', 50: 'Northeast', 9: 'Northeast',
+    34: 'Northeast', 36: 'Northeast', 42: 'Northeast',
+    17: 'Midwest', 18: 'Midwest', 26: 'Midwest', 39: 'Midwest', 55: 'Midwest',
+    19: 'Midwest', 20: 'Midwest', 27: 'Midwest', 29: 'Midwest', 31: 'Midwest', 38: 'Midwest', 46: 'Midwest',
+    1: 'South', 5: 'South', 10: 'South', 12: 'South', 13: 'South', 21: 'South', 22: 'South', 24: 'South',
+    28: 'South', 37: 'South', 40: 'South', 45: 'South', 47: 'South', 48: 'South', 51: 'South', 54: 'South',
+    4: 'West', 8: 'West', 16: 'West', 30: 'West', 32: 'West', 35: 'West', 49: 'West', 56: 'West',
+    2: 'West', 6: 'West', 15: 'West', 41: 'West', 53: 'West'
+}
+
+# Prepare state-to-region DataFrame
+region_data = pd.DataFrame([
+    {"id": fips, "region": region} for fips, region in state_region_mapping.items()
+])
+
+# Load US states GeoJSON
+states = alt.topo_feature(data.us_10m.url, "states")
+
+# Merge dataset into GeoJSON structure
+region_map = alt.Chart(states).mark_geoshape().transform_lookup(
+    lookup='id',
+    from_=alt.LookupData(region_data, key='id', fields=['region'])
+).transform_lookup(
+    lookup='region',
+    from_=alt.LookupData(df, key='region', fields=['any_household_energy_insecurity', 'total_cap_dc_region'])
+).encode(
+    color=alt.Color(
+        'any_household_energy_insecurity:Q',
+        scale=alt.Scale(scheme="reds"),
+        title="Energy Insecurity (%)"
+    ),
+    tooltip=[
+        alt.Tooltip('region:N', title="Region"),
+        alt.Tooltip('any_household_energy_insecurity:Q', title="Energy Insecurity (%)", format=".2f"),
+        alt.Tooltip('total_cap_dc_region:Q', title="DC Capacity", format=".1f")
+    ]
+).project(
+    type='albersUsa'
+).properties(
+    width=800,
+    height=500
+)
+
+region_map.display()
+
+```
+
+
+```{python}
+import altair as alt
+
+# Create a heatmap
+chart = alt.Chart(df).mark_rect().encode(
+    x=alt.X('division:N',
+            title='Division',
+            axis=alt.Axis(labelAngle=-45)),
+    y=alt.Y('any_household_energy_insecurity:Q',
+            title='Energy Insecurity (%)',
+            scale=alt.Scale(domain=[0, 8])),
+    color=alt.Color('facility_count_division:Q',
+                   title='Number of Facilities',
+                   scale=alt.Scale(scheme='blues')),
+    tooltip=[
+        alt.Tooltip('division:N', title='Division'),
+        alt.Tooltip('any_household_energy_insecurity:Q', 
+                   title='Energy Insecurity (%)', 
+                   format='.1f'),
+        alt.Tooltip('facility_count_division:Q', 
+                   title='Number of Facilities')
+    ]
+).properties(
+    width=600,
+    height=400,
+    title='Energy Insecurity and Facility Count by Division'
+)
+
+# Add text to show facility count values
+text = alt.Chart(df).mark_text(
+    baseline='middle',
+    fontSize=11
+).encode(
+    x='division:N',
+    y='any_household_energy_insecurity:Q',
+    text=alt.Text('facility_count_division:Q', format='.0f'),
+    color=alt.condition(
+        alt.datum.facility_count_division > 100,
+        alt.value('white'),
+        alt.value('black')
+    )
+)
+
+final_chart = chart + text
+```
+
+
+```{python}
+final_chart.show()
+```

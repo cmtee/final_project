@@ -1,0 +1,21 @@
+---
+title: "Untitled"
+format: html
+---
+
+
+```{python}
+import pandas as pd
+
+# Read the Excel file
+file_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC_11.1_with_PV_data.xlsx"
+df = pd.read_excel(file_path)
+
+# Convert column names to lowercase and replace spaces with underscores
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+
+# Save the modified DataFrame back to Excel
+df.to_excel(file_path, index=False)
+
+print("Column names have been updated and the file has been saved.")
+```
