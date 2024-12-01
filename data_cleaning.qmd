@@ -69,40 +69,42 @@ state_to_division = {
 # Step 4: Add region and division columns to the PV dataset
 pv_clean['region'] = pv_clean['p_state'].map(state_to_region)
 pv_clean['division'] = pv_clean['p_state'].map(state_to_division)
-
 ```
 ```{python}
+# Step 5: Convert year to numeric and filter for 2020
+pv_clean['p_year'] = pd.to_numeric(pv_clean['p_year'], errors='coerce')
+pv_2020 = pv_clean[pv_clean['p_year'] == 2020].copy()
 
-# Step 5: Aggregate PV data by region and division
-pv_agg_region = pv_clean.groupby('region').agg({
-    'case_id': 'count',
-    'p_cap_ac': 'sum',
-    'p_cap_dc': 'sum'
-}).reset_index()
+# Step 6: Aggregate data by region and division (for all years and 2020)
+def aggregate_data(df):
+    agg_region = df.groupby('region').agg({
+        'case_id': 'count',
+        'p_cap_ac': 'sum',
+        'p_cap_dc': 'sum'
+    }).reset_index()
+    
+    agg_division = df.groupby('division').agg({
+        'case_id': 'count',
+        'p_cap_ac': 'sum',
+        'p_cap_dc': 'sum'
+    }).reset_index()
+    
+    # Rename columns for clarity
+    for df in [agg_region, agg_division]:
+        df.columns = ['region' if 'region' in df.columns else 'division', 'facility_count', 'total_cap_ac', 'total_cap_dc']
+    
+    return agg_region, agg_division
 
-pv_agg_division = pv_clean.groupby('division').agg({
-    'case_id': 'count',
-    'p_cap_ac': 'sum',
-    'p_cap_dc': 'sum'
-}).reset_index()
-
-# Step 6: Rename columns for clarity
-pv_agg_region = pv_agg_region.rename(columns={
-    'case_id': 'facility_count',
-    'p_cap_ac': 'total_cap_ac',
-    'p_cap_dc': 'total_cap_dc'
-})
-
-pv_agg_division = pv_agg_division.rename(columns={
-    'case_id': 'facility_count',
-    'p_cap_ac': 'total_cap_ac',
-    'p_cap_dc': 'total_cap_dc'
-})
+pv_agg_region, pv_agg_division = aggregate_data(pv_clean)
+pv_agg_region_2020, pv_agg_division_2020 = aggregate_data(pv_2020)
 
 # Step 7: Save the results
+output_dir = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
 pv_clean.to_csv(os.path.join(output_dir, 'pv_data_regions_divisions.csv'), index=False)
 pv_agg_region.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_region.csv'), index=False)
 pv_agg_division.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_division.csv'), index=False)
+pv_agg_region_2020.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_region_2020.csv'), index=False)
+pv_agg_division_2020.to_csv(os.path.join(output_dir, 'pv_data_aggregated_by_division_2020.csv'), index=False)
 
 print(f"Data processing complete. Check the output CSV files in {output_dir}")
 ```
@@ -156,8 +158,3 @@ print(energy_insecurity_df['division'].unique())
     
 ```
 
-Now, we want to merge the two datasets
-
-```{python}
-
-```

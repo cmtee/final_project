@@ -75,52 +75,41 @@ region_map.display()
 
 
 ```{python}
-import altair as alt
+# Manually specify approximate region centroids (Longitude, Latitude)
+region_centroids = {
+    "Northeast": {"lon": -73, "lat": 43},   # Northeast
+    "Midwest": {"lon": -90, "lat": 41},     # Midwest
+    "South": {"lon": -86, "lat": 34},       # South
+    "West": {"lon": -115, "lat": 38}        # West
+}
 
-# Create a heatmap
-chart = alt.Chart(df).mark_rect().encode(
-    x=alt.X('division:N',
-            title='Division',
-            axis=alt.Axis(labelAngle=-45)),
-    y=alt.Y('any_household_energy_insecurity:Q',
-            title='Energy Insecurity (%)',
-            scale=alt.Scale(domain=[0, 8])),
-    color=alt.Color('facility_count_division:Q',
-                   title='Number of Facilities',
-                   scale=alt.Scale(scheme='blues')),
-    tooltip=[
-        alt.Tooltip('division:N', title='Division'),
-        alt.Tooltip('any_household_energy_insecurity:Q', 
-                   title='Energy Insecurity (%)', 
-                   format='.1f'),
-        alt.Tooltip('facility_count_division:Q', 
-                   title='Number of Facilities')
-    ]
-).properties(
-    width=600,
-    height=400,
-    title='Energy Insecurity and Facility Count by Division'
-)
+# Convert centroids to a DataFrame
+centroids_df = pd.DataFrame([
+    {"region": region, "lon": coords["lon"], "lat": coords["lat"]}
+    for region, coords in region_centroids.items()
+])
 
-# Add text to show facility count values
-text = alt.Chart(df).mark_text(
-    baseline='middle',
-    fontSize=11
+# Merge centroids with the existing dataset
+df_with_centroids = pd.merge(df, centroids_df, on="region", how="left")
+
+# Add Region Labels to the Map
+region_labels = alt.Chart(df_with_centroids).mark_text(
+    fontSize=14,
+    fontWeight="bold",
+    color="white",
+    align="center"
 ).encode(
-    x='division:N',
-    y='any_household_energy_insecurity:Q',
-    text=alt.Text('facility_count_division:Q', format='.0f'),
-    color=alt.condition(
-        alt.datum.facility_count_division > 100,
-        alt.value('white'),
-        alt.value('black')
-    )
+    longitude='lon:Q',
+    latitude='lat:Q',
+    text='region:N'
 )
 
-final_chart = chart + text
+# Combine the Base Map and Region Labels
+final_chart = region_map + region_labels
+final_chart.display()
 ```
 
 
 ```{python}
-final_chart.show()
+final_chart.save("region_map_with_labels.png", format="png")
 ```
