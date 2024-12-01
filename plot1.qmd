@@ -55,11 +55,11 @@ region_map = alt.Chart(states).mark_geoshape().transform_lookup(
     color=alt.Color(
         'any_household_energy_insecurity:Q',
         scale=alt.Scale(scheme="reds"),
-        title="Energy Insecurity (%)"
+        title="Energy Insecurity (Millions of housing units)"
     ),
     tooltip=[
         alt.Tooltip('region:N', title="Region"),
-        alt.Tooltip('any_household_energy_insecurity:Q', title="Energy Insecurity (%)", format=".2f"),
+        alt.Tooltip('any_household_energy_insecurity:Q', title="Energy Insecurity (Millions of housing units)", format=".2f"),
         alt.Tooltip('total_cap_dc_region:Q', title="DC Capacity", format=".1f")
     ]
 ).project(
@@ -111,5 +111,5 @@ final_chart.display()
 
 
 ```{python}
-final_chart.save("region_map_with_labels.png", format="png")
+final_chart.save("plot1.png", format="png")
 ```
