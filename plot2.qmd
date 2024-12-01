@@ -1,6 +1,15 @@
 ---
-title: "Untitled"
-format: html
+title: "Energy Insecurity Analysis"
+subtitle: "Regional and Divisional Analysis of Energy Insecurity and AC Capacity"
+format:
+  html:
+    code-fold: true
+    fig-width: 10
+    fig-height: 6
+    embed-resources: true  # Add this line to embed images
+execute:
+  warning: false
+  message: false
 ---
 
 ```{python}
@@ -8,72 +17,53 @@ import pandas as pd
 import altair as alt
 from vega_datasets import data
 import json
+from altair_saver import save
 
 # Read the CSV file
 df = pd.read_excel(r"C:\Users\eddie\OneDrive\Documents\GitHub\final_project\HC_11.1_with_PV_data.xlsx")
 ```
 
 ```{python}
-# Filter for just region rows without divisions
-regions_df = df[df['division'].isna() & df['region'].notna()].copy()
+# Filter for division rows (exclude nulls)
+division_df = df[df['division'].notna()].copy()
 
-chart = alt.Chart(regions_df).mark_point().encode(
-    x=alt.X('any_household_energy_insecurity:Q', 
-            title='Energy Insecurity (%)',
-            scale=alt.Scale(zero=False)),
-    y=alt.Y('total_cap_ac_region:Q',
-            title='Total AC Capacity',
-            scale=alt.Scale(zero=False)),
-    color=alt.Color('region:N', title='Region'),
-    tooltip=[
-        alt.Tooltip('region:N', title='Region'),
-        alt.Tooltip('any_household_energy_insecurity:Q', title='Energy Insecurity (%)', format='.2f'),
-        alt.Tooltip('total_cap_ac_region:Q', title='AC Capacity', format='.2f')
-    ]
-).properties(
-    width=600,
-    height=400,
-    title='Energy Insecurity vs AC Capacity by Region'
-).interactive()
-```
-
-
-```{python}
-chart.display()
-```
-
-
-```{python}
-# Filter for just region rows without divisions
-regions_df = df[df['division'].isna() & df['region'].notna()].copy()
-
-division_chart = alt.Chart(regions_df).mark_point(
+division_chart = alt.Chart(division_df).mark_point(
     size=200,  # Make points larger
     filled=True,  # Fill the points
     opacity=0.7  # Add some transparency
 ).encode(
-    x=alt.X('any_household_energy_insecurity:Q', 
-            title='Energy Insecurity (%)',
-            scale=alt.Scale(zero=False, padding=50)),  # Add padding to x-axis
-    y=alt.Y('total_cap_ac_region:Q',
-            title='Total AC Capacity',
-            scale=alt.Scale(zero=False, padding=50)),  # Add padding to y-axis
-    color=alt.Color('region:N', 
-                   title='Region',
-                   scale=alt.Scale(scheme='category10')),  # Use a better color scheme
+    x=alt.X(
+        'total_cap_ac_division:Q',
+        title='Total AC Capacity',
+        scale=alt.Scale(zero=False, padding=50)  # Add padding to x-axis
+    ),
+    y=alt.Y(
+        'any_household_energy_insecurity:Q',
+        title='Energy Insecurity (Millions of housing units)',
+        scale=alt.Scale(zero=False, padding=50)  # Add padding to y-axis
+    ),
+    color=alt.Color(
+        'division:N',
+        title='Division',
+        scale=alt.Scale(scheme='tableau10')  # Use a color scheme for divisions
+    ),
     tooltip=[
-        alt.Tooltip('region:N', title='Region'),
-        alt.Tooltip('any_household_energy_insecurity:Q', title='Energy Insecurity (%)', format='.2f'),
-        alt.Tooltip('total_cap_ac_region:Q', title='AC Capacity', format='.2f')
+        alt.Tooltip('division:N', title='Division'),
+        alt.Tooltip('total_cap_ac_division:Q', title='AC Capacity', format='.2f'),
+        alt.Tooltip('any_household_energy_insecurity:Q', title='Energy Insecurity (Millions of housing units)', format='.2f')
     ]
 ).properties(
     width=800,  # Make chart wider
     height=500,  # Make chart taller
-    title='Energy Insecurity vs AC Capacity by Region'
+    title='Total AC Capacity vs Energy Insecurity by Division'
 ).interactive()
+
+division_chart
+
 ```
 
 
 ```{python}
-divisions_chart.display()
+division_chart.save('plot2.png')
 ```
+
