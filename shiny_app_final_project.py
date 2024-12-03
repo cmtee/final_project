@@ -2,7 +2,9 @@ from shiny import App, render, ui
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from vega_datasets import data  # Ensure this is imported
+from vega_datasets import data  
+from sklearn.cluster import DBSCAN 
+import numpy as np
 
 # Load US states GeoJSON using Geopandas
 states = gpd.read_file(data.us_10m.url, layer='states')
@@ -63,7 +65,6 @@ app_ui = ui.page_fluid(
 )
 
 # Define Server
-# Define Server
 def server(input, output, session):
     @output
     @render.plot
@@ -100,8 +101,8 @@ def server(input, output, session):
 
         if selected_region == 'West': 
             ax.set_xlim(-125, -100)
-            ax.set_ylim(31, 50)
-
+            ax.set_ylim(31.25, 50)
+        
         # Customize the plot
         ax.set_title(f'Power Capacity in AC (Megawatts) in {selected_region}')
         ax.set_xlabel('Longitude')
