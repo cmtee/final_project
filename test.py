@@ -21,55 +21,12 @@ df_1["ylat_1"] = df_1["ylat"].round(4)
 
 # State-to-region mapping (FIPS codes)
 state_region_mapping = {
-    23: "Northeast",
-    25: "Northeast",
-    33: "Northeast",
-    44: "Northeast",
-    50: "Northeast",
-    9: "Northeast",
-    34: "Northeast",
-    36: "Northeast",
-    42: "Northeast",
-    17: "Midwest",
-    18: "Midwest",
-    26: "Midwest",
-    39: "Midwest",
-    55: "Midwest",
-    19: "Midwest",
-    20: "Midwest",
-    27: "Midwest",
-    29: "Midwest",
-    31: "Midwest",
-    38: "Midwest",
-    46: "Midwest",
-    1: "South",
-    5: "South",
-    10: "South",
-    12: "South",
-    13: "South",
-    21: "South",
-    22: "South",
-    24: "South",
-    28: "South",
-    37: "South",
-    40: "South",
-    45: "South",
-    47: "South",
-    48: "South",
-    51: "South",
-    54: "South",
-    4: "West",
-    8: "West",
-    16: "West",
-    30: "West",
-    32: "West",
-    35: "West",
-    49: "West",
-    56: "West",
-    2: "West",
-    6: "West",
-    15: "West",
-    41: "West",
+    23: "Northeast", 25: "Northeast", 33: "Northeast", 44: "Northeast", 50: "Northeast", 9: "Northeast",
+    34: "Northeast", 36: "Northeast", 42: "Northeast", 17: "Midwest", 18: "Midwest", 26: "Midwest", 39: "Midwest", 
+    55: "Midwest", 19: "Midwest", 20: "Midwest", 27: "Midwest", 29: "Midwest", 31: "Midwest", 38: "Midwest", 46: "Midwest",
+    1: "South", 5: "South", 10: "South", 12: "South", 13: "South", 21: "South", 22: "South", 24: "South", 28: "South", 
+    37: "South", 40: "South", 45: "South", 47: "South", 48: "South", 51: "South", 54: "South", 4: "West", 8: "West", 
+    16: "West", 30: "West", 32: "West", 35: "West", 49: "West", 56: "West", 2: "West", 6: "West", 15: "West", 41: "West", 
     53: "West",
 }
 
@@ -132,6 +89,8 @@ def server(input, output, session):
             s=100,
             alpha=0.6,
             edgecolors="w",
+            vmin=0,  # consistent color scale
+            vmax=600  # consistent color scale
         )
 
         # Add a colorbar for the scatter plot
@@ -144,6 +103,11 @@ def server(input, output, session):
         ax.set_ylabel("Latitude")
         ax.grid(True)
         ax.set_axis_off()
+
+        # Adjust view for West region
+        if selected_region == 'West':
+            ax.set_xlim(-125, -100)
+            ax.set_ylim(31.25, 50)
 
         return fig
 
