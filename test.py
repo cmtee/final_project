@@ -9,7 +9,7 @@ states = gpd.read_file(data.us_10m.url, layer="states")
 states["id"] = states["id"].astype(int)
 
 # Load the data file
-df_1 = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\pv_data_regions_divisions.csv")
+df_1 = pd.read_csv(r"C:/Users/prash/Downloads/pv_data_regions_divisions.csv")
 
 # Ensure longitude and latitude are correct and numeric
 df_1["xlong"] = pd.to_numeric(df_1["xlong"], errors="coerce")
