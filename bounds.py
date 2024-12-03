@@ -8,7 +8,7 @@ from vega_datasets import data  # Ensure this is imported
 states = gpd.read_file(data.us_10m.url, layer='states')
 states['id'] = states['id'].astype(int)
 
-df_1 = pd.read_csv(r"C:/Users/prash/Downloads/pv_data_regions_divisions.csv")
+df_1 = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\pv_data_regions_divisions.csv")
 
 # Convert xlong and ylat columns to integers
 df_1['xlong_1'] = df_1['xlong'].astype(int)
@@ -49,9 +49,6 @@ states = states.merge(df, how='left', left_on='region', right_on='region')
 # Ensure the geometry column is set
 states = states.set_geometry('geometry')
 
-# Coding region = NaN as Unclassified
-#states['region'] = states['region'].fillna('Unclassified')
-
 # Energy Insecurity levels list
 region_list = df_1['region'].unique().tolist()
 
@@ -62,7 +59,6 @@ app_ui = ui.page_fluid(
     ui.output_plot("my_plot"),
 )
 
-# Define Server
 # Define Server
 def server(input, output, session):
     @output
@@ -76,16 +72,26 @@ def server(input, output, session):
         # Filter the main dataframe to get the points with the selected region
         filtered_points = df_1[df_1['region'] == selected_region]
 
+        # Create a GeoDataFrame for the points
+        points_gdf = gpd.GeoDataFrame(
+            filtered_points, 
+            geometry=gpd.points_from_xy(filtered_points['xlong_1'], filtered_points['ylat_1']),
+            crs="EPSG:4326"
+        )
+
+        # Clip the points to the selected region's boundary
+        clipped_points = gpd.sjoin(points_gdf, filtered_states, how="inner", op='within')
+
         fig, ax = plt.subplots(1, 1, figsize=(50, 30))
 
         # Plot the filtered states
         filtered_states.boundary.plot(ax=ax, linewidth=1)
 
-        # Scatterplot for filtered points
+        # Scatterplot for clipped points
         scatter = ax.scatter(
-            filtered_points['xlong_1'],
-            filtered_points['ylat_1'],
-            c=filtered_points['p_cap_ac'],
+            clipped_points['xlong_1'],
+            clipped_points['ylat_1'],
+            c=clipped_points['p_cap_ac'],
             cmap='viridis',
             s=100,
             alpha=0.6,
@@ -114,4 +120,3 @@ def server(input, output, session):
 
 # Run the Shiny app
 app = App(app_ui, server)
-

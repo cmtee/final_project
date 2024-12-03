@@ -55,7 +55,7 @@ division_chart = alt.Chart(division_df).mark_point(
 ).properties(
     width=800,  # Make chart wider
     height=500,  # Make chart taller
-    title='Total AC Capacity vs Energy Insecurity by Division'
+    title='Total AC Capacity vs Energy Insecurity by Division (megawatts)'
 ).interactive()
 
 division_chart
