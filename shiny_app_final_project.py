@@ -89,12 +89,18 @@ def server(input, output, session):
             cmap='viridis',
             s=100,
             alpha=0.6,
-            edgecolors='w'
+            edgecolors='w', 
+            vmin= 0, 
+            vmax = 600
         )
 
         # Add colorbar
         cbar = plt.colorbar(scatter, ax=ax)
         cbar.set_label('Power Capacity in AC (Megawatts)')
+
+        if selected_region == 'West': 
+            ax.set_xlim(-125, -100)
+            ax.set_ylim(31, 50)
 
         # Customize the plot
         ax.set_title(f'Power Capacity in AC (Megawatts) in {selected_region}')
