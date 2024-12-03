@@ -34,7 +34,7 @@ division_chart = alt.Chart(division_df).mark_point(
 ).encode(
     x=alt.X(
         'total_cap_ac_division:Q',
-        title='Total AC Capacity',
+        title='Total AC Capacity (in megawatts)',
         scale=alt.Scale(zero=False, padding=50)  # Add padding to x-axis
     ),
     y=alt.Y(
