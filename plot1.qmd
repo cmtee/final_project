@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Plot1"
 format: html
 ---
 
@@ -43,38 +43,51 @@ region_data = pd.DataFrame([
 
 # Load US states GeoJSON
 states = alt.topo_feature(data.us_10m.url, "states")
+```
 
-# Merge dataset into GeoJSON structure
+
+```{python}
+# Updated chart with a descriptive title
 region_map = alt.Chart(states).mark_geoshape().transform_lookup(
     lookup='id',
     from_=alt.LookupData(region_data, key='id', fields=['region'])
 ).transform_lookup(
     lookup='region',
-    from_=alt.LookupData(df, key='region', fields=['any_household_energy_insecurity', 'total_cap_dc_region'])
+    from_=alt.LookupData(df, key='region', fields=[
+                         'any_household_energy_insecurity', 'total_cap_dc_region'])
 ).encode(
     color=alt.Color(
         'any_household_energy_insecurity:Q',
         scale=alt.Scale(scheme="reds"),
-        title="Energy Insecurity (Millions of housing units)"
+        title="Energy Insecurity (Millions of housing units)",
+        legend=alt.Legend(
+            labelFontSize=10,
+            titleFontSize=12,
+            orient="right",
+            direction="vertical",
+            titleLimit=300
+        )
     ),
     tooltip=[
         alt.Tooltip('region:N', title="Region"),
-        alt.Tooltip('any_household_energy_insecurity:Q', title="Energy Insecurity (Millions of housing units)", format=".2f"),
+        alt.Tooltip('any_household_energy_insecurity:Q',
+                    title="Energy Insecurity (Millions of housing units)", format=".2f"),
         alt.Tooltip('total_cap_dc_region:Q', title="DC Capacity", format=".1f")
     ]
 ).project(
     type='albersUsa'
 ).properties(
     width=800,
-    height=500
+    height=500,
+    title={
+        "text": "Energy Insecurity and DC Capacity Across US Regions",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "anchor": "middle",  # Center the title
+        "dy": -10            # Adjust the vertical position of the title
+    }
 )
 
-region_map.display()
-
-```
-
-
-```{python}
 # Manually specify approximate region centroids (Longitude, Latitude)
 region_centroids = {
     "Northeast": {"lon": -73, "lat": 43},   # Northeast
@@ -84,17 +97,15 @@ region_centroids = {
 }
 
 # Convert centroids to a DataFrame
-centroids_df = pd.DataFrame([
-    {"region": region, "lon": coords["lon"], "lat": coords["lat"]}
-    for region, coords in region_centroids.items()
-])
+centroids_df = pd.DataFrame([{"region": region, "lon": coords["lon"],
+                            "lat": coords["lat"]} for region, coords in region_centroids.items()])
 
 # Merge centroids with the existing dataset
 df_with_centroids = pd.merge(df, centroids_df, on="region", how="left")
 
 # Add Region Labels to the Map
 region_labels = alt.Chart(df_with_centroids).mark_text(
-    fontSize=14,
+    fontSize=12,
     fontWeight="bold",
     color="white",
     align="center"
@@ -104,9 +115,12 @@ region_labels = alt.Chart(df_with_centroids).mark_text(
     text='region:N'
 )
 
-# Combine the Base Map and Region Labels
+# Combine the Base Map and Region Labels without including conflicting config attributes
 final_chart = region_map + region_labels
+
+# Display the chart
 final_chart.display()
+
 ```
 
 
