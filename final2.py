@@ -1,4 +1,4 @@
-from shiny import App, render, ui 
+from shiny import App, render, ui
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -75,17 +75,18 @@ def server(input, output, session):
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
         if selected_region == "Full US":
-            # Filter out Alaska and Hawaii, only keep the contiguous 48 states
-            contiguous_states = states[~states["id"].isin([2, 15, 41, 53, 60, 69, 72, 78, 80])]
+            # Filter out Alaska (id 2) and Hawaii (id 15), but include Washington and Oregon
+            contiguous_states = states[~states["id"].isin([2, 15, 60, 69, 72, 78])]
             contiguous_states.boundary.plot(ax=ax, linewidth=1, edgecolor="black")
             filtered_points = df_1  # Use all points for the entire US
             ax.set_title("Power Capacity in AC (Megawatts) Across the US")
             ax.set_xlim(-125, -66)  # Set appropriate xlim for contiguous US
             ax.set_ylim(24, 49)  # Set appropriate ylim for contiguous US
         else:
-            # Handle filtering for the West region by excluding Alaska and Hawaii
+            # Handle filtering for the selected region
             if selected_region == "West":
-                filtered_states = states[(states["region"] == selected_region) & ~states["id"].isin([2, 15, 41, 53])]
+                # Exclude only Alaska (id 2) and Hawaii (id 15), keep Washington and Oregon
+                filtered_states = states[(states["region"] == selected_region) & ~states["id"].isin([2, 15])]
             else:
                 filtered_states = states[states["region"] == selected_region]
 
