@@ -1,0 +1,61 @@
+# Logs
+*.log
+*.tlog
+*.pid
+*.csv
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual environment
+env/
+venv/
+ENV/
+VENV/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python bytecode cache
+__pycache__/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python build files
+build/
+dist/
+*.egg-info/
+
+# Python test reports
+htmlcov/
+.coverage
+.tox/
+
+# PyCharm project files
+.idea/
+
+# Cache files
+*.swp
+*.swo
+*.tmp
+.cache/
+*.bak
+
+# Ignore large data files
+*.data
+*.sqlite3
+*.db
+
+# Ignore hidden files, but not .gitignore
+.*
+!.gitignore
