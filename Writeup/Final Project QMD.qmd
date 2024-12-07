@@ -301,7 +301,6 @@ final_chart.display()
 
 ```{python}
 # Plot 2
-
 import pandas as pd
 import altair as alt
 from vega_datasets import data
@@ -512,13 +511,14 @@ After carefully reviewing our datasets, we dropped missing values and aggregated
 
 **Results**
 
-![Plot 1](plot1.png)
+<img src="plot1.png" alt="Plot1" width="400" />
 
 As we can see, energy insecurity appears to be far stronger in the South of the US. This may be due to weather conditions here such as greater humidity and increased susceptibility to heat waves. By contrast, the West has the lowest energy insecurity. The Northeast, the coldest region in the country, also displays an elevated level of energy insecurity. After having visualized the data, we moved on to producing a scatter plot that could help us answer our research question of interest: Is more solar power capacity a good indicator for how secure households near these plants felt about their energy? On the y-axis, we have the energy insecurity per millions of housing units within a particular region. On the x-axis is the cumulative AC capacity of all solar facilities within a given subregion:
 
+<img src="plot2.png" alt="Plot2" width="400" />
 
+<img src="shiny.png" alt="Shiny" width="400" />
 
-![Plot 2](plot2.png)
 
 We do not appear to observe any kind of strong correlation between these two variables, which we believe is an interesting finding in and of itself. We will discuss this further within the conclusion section. Lastly, our shiny app allows us to zoom in on solar infrastructure within any region of interest in the country. Our slider allows us to filter by solar capacity, meaning we can isolate particularly high or low-performing plants in a given area. There is also the option to view the full US map at once.
 

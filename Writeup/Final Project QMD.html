@@ -87,24 +87,13 @@ ul.task-list li input[type="checkbox"] {
 <p>Our second dataset came from the United States Geological Survey, a government agency focused on surveying natural resources and energy facilities. We used their geographic database on Solar Photovoltaic facilities, which compiled all major US solar production facilities by year, along with their production capacity, location, and starting date. These facilities are in charge of supplying solar power to the grid, making them pivotal components of solar infrastructure development in the US. For our analysis, we focused on each facility’s production capacity, serving as a proxy for their level of development.</p>
 <p>After carefully reviewing our datasets, we dropped missing values and aggregated the Solar PV data by region and regional subdivisions, mimicking the structure of the RECS data. We then restructured the RECS data to have a separate column denoting region and division, allowing us to merge the data on region and division. After this merge, each row in our dataframe represented one solar photovoltaic facility, along with both its region and division, and the relevant energy insecurity index of that given location.</p>
 <p><strong>Results</strong></p>
-<p>We first produced data visualizations that allowed us to get a better understanding of the energy insecurity landscape across the US.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="plot1.png" class="img-fluid figure-img"></p>
-<figcaption>Plot 1</figcaption>
-</figure>
-</div>
+<p><img src="plot1.png" alt="Plot1" width="400"></p>
 <p>As we can see, energy insecurity appears to be far stronger in the South of the US. This may be due to weather conditions here such as greater humidity and increased susceptibility to heat waves. By contrast, the West has the lowest energy insecurity. The Northeast, the coldest region in the country, also displays an elevated level of energy insecurity. After having visualized the data, we moved on to producing a scatter plot that could help us answer our research question of interest: Is more solar power capacity a good indicator for how secure households near these plants felt about their energy? On the y-axis, we have the energy insecurity per millions of housing units within a particular region. On the x-axis is the cumulative AC capacity of all solar facilities within a given subregion:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="plot2.png" class="img-fluid figure-img"></p>
-<figcaption>Plot 2</figcaption>
-</figure>
-</div>
+<p><img src="plot2.png" alt="Plot2" width="400"></p>
+<p><img src="shiny.png" alt="Shiny" width="400"></p>
 <p>We do not appear to observe any kind of strong correlation between these two variables, which we believe is an interesting finding in and of itself. We will discuss this further within the conclusion section. Lastly, our shiny app allows us to zoom in on solar infrastructure within any region of interest in the country. Our slider allows us to filter by solar capacity, meaning we can isolate particularly high or low-performing plants in a given area. There is also the option to view the full US map at once.</p>
 <p><strong>Discussion and Conclusion</strong></p>
 <p>By seeing no correlation, the data seems to suggest that solar facility capacity is not a good predictor of energy insecurity, and that the above hypotheses may not be playing out as anticipated. This may be the case because of how far away these facilities are from residential areas, or may even be a sign that higher local expenditure in solar energy facilities is uncorrelated with higher expenditure on average household energy consumption.</p>
-<p>It may also be the case that regions across the US vary too much regarding weather conditions for solar energy provision to make any meaningful difference. For example, extreme heat waves in Texas or cold in Illinois may be issues that require more impactful weatherization efforts like repairing HVAC or sealing windows to alleviate.</p>
 <p>The data analysis is indicative that more research ought to be done into the factors that influence energy insecurity. With renewables as the future of energy, we need to ensure their development is not leaving households behind. If we can find a way to pair renewable energy development with greater energy security for households, this may reinforce the importance of these sources of energy within the current ecosystem. If we were to run this analysis again, it may be interesting to observe how weatherization assistance programs may affect energy insecurity, although publicly available quantitative data is limited.</p>
 <p>We believe the greatest strength of our project lies in our map visualizations. These provide an easily accessible landscape for both energy insecurity and solar PV capacity, which could allow policymakers to more easily visualize which regions are most or least developed when it comes to renewable energy infrastructure.</p>
 </section>
