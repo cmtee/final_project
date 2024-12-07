@@ -1,8 +1,31 @@
+# Ignore Quarto markdown files
+plot1.qmd
+plot2.qmd
+data_cleaning.qmd
+data_cleaning_2.qmd
+merging_data.qmd
+Final Project QMD.qmd
+
+# Ignore Python files
+final.py
+final2.py
+
+# Ignore PNG and other image files
+plot1.png
+plot2.png
+
+# Ignore PDF files
+Python Write-up.pdf
+final_project_write_up.pdf
+Solar Infrastructure and Energy Insecurity in the US.pdf
+
+# Ignore HTML files
+Final Project QMD.html
+
 # Logs
 *.log
 *.tlog
 *.pid
-*.csv
 
 # Compiled Python files
 *.pyc
@@ -59,3 +82,6 @@ htmlcov/
 # Ignore hidden files, but not .gitignore
 .*
 !.gitignore
+
+# Do not ignore README.md
+!README.md
