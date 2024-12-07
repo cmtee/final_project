@@ -1,0 +1,535 @@
+---
+title: "Final Project"
+author: "Clarice Tee, Eddie Andujar, and Prashanthi Subbiah"
+date: 12-07-2024
+format: html
+execute:
+  echo: false
+  eval: false
+---
+
+
+```{python}
+## Data Cleaning
+#(Note: We have 3 separate qmds for data cleaning, but we've added them to this document.
+# Each one produces excelcsv files used for the plotting and shiny app.)
+
+# Data cleaning step 1
+import pandas as pd
+import numpy as np
+import os
+
+# Set directory paths
+dir_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
+output_dir = dir_path
+
+# Step 1: Load energy insecurity and solar PV datasets
+energy_insecurity_df = pd.read_excel(os.path.join(dir_path, "HC 11.1.xlsx"))
+solar_pv_df = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\uspvdbCSV\uspvdb_v2_0_20240801.csv")
+
+
+# Step 2: Clean and prepare solar PV dataset
+columns_to_keep = ['case_id', 'p_state', 'ylat', 'xlong', 'p_year', 'p_cap_ac', 'p_cap_dc']
+pv_clean = solar_pv_df[columns_to_keep].copy()
+
+# Step 3: Define mappings for regions and divisions
+state_to_region = {
+    'CT': 'Northeast', 'ME': 'Northeast', 'MA': 'Northeast', 'NH': 'Northeast', 'RI': 'Northeast', 'VT': 'Northeast',
+    'NJ': 'Northeast', 'NY': 'Northeast', 'PA': 'Northeast',
+    'IL': 'Midwest', 'IN': 'Midwest', 'MI': 'Midwest', 'OH': 'Midwest', 'WI': 'Midwest',
+    'IA': 'Midwest', 'KS': 'Midwest', 'MN': 'Midwest', 'MO': 'Midwest', 'NE': 'Midwest', 'ND': 'Midwest', 'SD': 'Midwest',
+    'DE': 'South', 'FL': 'South', 'GA': 'South', 'MD': 'South', 'NC': 'South', 'SC': 'South', 'VA': 'South', 'WV': 'South', 'DC': 'South',
+    'AL': 'South', 'KY': 'South', 'MS': 'South', 'TN': 'South',
+    'AR': 'South', 'LA': 'South', 'OK': 'South', 'TX': 'South',
+    'AZ': 'West', 'CO': 'West', 'ID': 'West', 'MT': 'West', 'NV': 'West', 'NM': 'West', 'UT': 'West', 'WY': 'West',
+    'AK': 'West', 'CA': 'West', 'HI': 'West', 'OR': 'West', 'WA': 'West'
+}
+
+state_to_division = {
+    'CT': 'New England', 'ME': 'New England', 'MA': 'New England', 'NH': 'New England', 'RI': 'New England', 'VT': 'New England',
+    'NJ': 'Middle Atlantic', 'NY': 'Middle Atlantic', 'PA': 'Middle Atlantic',
+    'IL': 'East North Central', 'IN': 'East North Central', 'MI': 'East North Central', 'OH': 'East North Central', 'WI': 'East North Central',
+    'IA': 'West North Central', 'KS': 'West North Central', 'MN': 'West North Central', 'MO': 'West North Central',
+    'NE': 'West North Central', 'ND': 'West North Central', 'SD': 'West North Central',
+    'DE': 'South Atlantic', 'FL': 'South Atlantic', 'GA': 'South Atlantic', 'MD': 'South Atlantic', 'NC': 'South Atlantic',
+    'SC': 'South Atlantic', 'VA': 'South Atlantic', 'WV': 'South Atlantic', 'DC': 'South Atlantic',
+    'AL': 'East South Central', 'KY': 'East South Central', 'MS': 'East South Central', 'TN': 'East South Central',
+    'AR': 'West South Central', 'LA': 'West South Central', 'OK': 'West South Central', 'TX': 'West South Central',
+    'AZ': 'Mountain', 'CO': 'Mountain', 'ID': 'Mountain', 'MT': 'Mountain', 'NV': 'Mountain', 'NM': 'Mountain', 'UT': 'Mountain', 'WY': 'Mountain',
+    'AK': 'Pacific', 'CA': 'Pacific', 'HI': 'Pacific', 'OR': 'Pacific', 'WA': 'Pacific'
+}
+
+# Step 4: Map regions and divisions to PV dataset
+pv_clean['region'] = pv_clean['p_state'].map(state_to_region)
+pv_clean['division'] = pv_clean['p_state'].map(state_to_division)
+
+# Step 5: Convert year to numeric and filter for 2020
+pv_clean['p_year'] = pd.to_numeric(pv_clean['p_year'], errors='coerce')
+pv_2020 = pv_clean[pv_clean['p_year'] == 2020].copy()
+
+# Step 6: Aggregate solar PV data
+def aggregate_data(df, group_col):
+    return df.groupby(group_col).agg(
+        facility_count=('case_id', 'count'),
+        total_cap_ac=('p_cap_ac', 'sum'),
+        total_cap_dc=('p_cap_dc', 'sum')
+    ).reset_index()
+
+# Aggregated data by region and division
+pv_agg_region = aggregate_data(pv_clean, 'region')
+pv_agg_division = aggregate_data(pv_clean, 'division')
+pv_agg_region_2020 = aggregate_data(pv_2020, 'region')
+pv_agg_division_2020 = aggregate_data(pv_2020, 'division')
+
+# Combine region and division into a single dataset for PV data
+pv_by_region_division = pd.merge(
+    pv_agg_region_2020, pv_agg_division_2020, how='outer', on='region',
+    suffixes=('_region', '_division')
+)
+
+# Step 7: Clean and map regions/divisions in the energy insecurity dataset
+energy_insecurity_df['region'] = energy_insecurity_df.iloc[:, 0].map(state_to_region)
+energy_insecurity_df['division'] = energy_insecurity_df.iloc[:, 0].map(state_to_division)
+
+# Step 8: Merge energy insecurity data with PV data
+hc_data_with_region = pd.merge(energy_insecurity_df, pv_agg_region, on='region', how='left')
+hc_and_pv = pd.merge(hc_data_with_region, pv_agg_division, on='division', how='left')
+
+# Step 9: Save all results
+pv_agg_region.to_csv(os.path.join(output_dir, 'pv_by_region.csv'), index=False)
+pv_agg_division.to_csv(os.path.join(output_dir, 'pv_by_division.csv'), index=False)
+pv_by_region_division.to_csv(os.path.join(output_dir, 'pv_by_region_division.csv'), index=False)
+hc_and_pv.to_excel(os.path.join(output_dir, 'hc_and_pv.xlsx'), index=False)
+
+print("Data cleaning, processing, and merging complete. Files saved:")
+print("- pv_by_region.csv")
+print("- pv_by_division.csv")
+print("- pv_by_region_division.csv")
+print("- hc_and_pv.xlsx")
+
+```
+
+
+
+```{python}
+# Data cleaning step 2
+
+import pandas as pd
+
+# Read the Excel file
+file_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC_11.1_with_PV_data.xlsx"
+df = pd.read_excel(file_path)
+
+# Convert column names to lowercase and replace spaces with underscores
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+
+# Save the modified DataFrame back to Excel
+df.to_excel(file_path, index=False)
+
+print("Column names have been updated and the file has been saved.")
+```
+
+
+
+```{python}
+# Data merging:
+
+# Set the directory path
+dir_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
+
+# Load the Excel file
+excel_file = os.path.join(dir_path, 'HC_11.1_cleaned.xlsx')
+hc_data = pd.read_excel(excel_file)
+
+# Load the CSV files
+region_file = os.path.join(dir_path, 'pv_data_aggregated_by_region_2020.csv')
+division_file = os.path.join(dir_path, 'pv_data_aggregated_by_division_2020.csv')
+pv_region_data = pd.read_csv(region_file)
+pv_division_data = pd.read_csv(division_file)
+
+# Function to match and merge data
+def match_and_merge(hc_df, pv_df, key):
+    merged = hc_df.merge(pv_df, left_on=key, right_on=key, how='left')
+    return merged
+
+# Match and merge region data
+hc_data_with_region = match_and_merge(hc_data, pv_region_data, 'region')
+
+# Match and merge division data
+hc_data_with_all = match_and_merge(hc_data_with_region, pv_division_data, 'division')
+
+# Rename columns to avoid confusion
+hc_data_with_all = hc_data_with_all.rename(columns={
+    'facility_count_x': 'facility_count_region',
+    'total_cap_ac_x': 'total_cap_ac_region',
+    'total_cap_dc_x': 'total_cap_dc_region',
+    'facility_count_y': 'facility_count_division',
+    'total_cap_ac_y': 'total_cap_ac_division',
+    'total_cap_dc_y': 'total_cap_dc_division'
+})
+
+# Save the result to a new Excel file
+output_file = os.path.join(dir_path, 'HC_11.1_with_PV_data.xlsx')
+hc_data_with_all.to_excel(output_file, index=False)
+
+print(f"Data matching complete. Results saved to {output_file}")
+```
+
+
+```{python}
+## Plot 1 Code:
+
+import pandas as pd
+import altair as alt
+from vega_datasets import data
+import json
+# Load US states/divisions topology
+states = alt.topo_feature(data.us_10m.url, 'states')
+# Read the CSV file
+df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\hc_and_pv.xlsx")
+```
+
+```{python}
+# Example dataset
+data_dict = {
+    "region": ["Northeast", "Midwest", "South", "West"],
+    "any_household_energy_insecurity": [3.69, 3.25, 4.66, 2.98],
+    "total_cap_dc_region": [639.3, 687.3, 9848.64, 4006.8]
+}
+
+df = pd.DataFrame(data_dict)
+
+# State-to-region mapping (FIPS codes based on U.S. GeoJSON)
+state_region_mapping = {
+    23: 'Northeast', 25: 'Northeast', 33: 'Northeast', 44: 'Northeast', 50: 'Northeast', 9: 'Northeast',
+    34: 'Northeast', 36: 'Northeast', 42: 'Northeast',
+    17: 'Midwest', 18: 'Midwest', 26: 'Midwest', 39: 'Midwest', 55: 'Midwest',
+    19: 'Midwest', 20: 'Midwest', 27: 'Midwest', 29: 'Midwest', 31: 'Midwest', 38: 'Midwest', 46: 'Midwest',
+    1: 'South', 5: 'South', 10: 'South', 12: 'South', 13: 'South', 21: 'South', 22: 'South', 24: 'South',
+    28: 'South', 37: 'South', 40: 'South', 45: 'South', 47: 'South', 48: 'South', 51: 'South', 54: 'South',
+    4: 'West', 8: 'West', 16: 'West', 30: 'West', 32: 'West', 35: 'West', 49: 'West', 56: 'West',
+    2: 'West', 6: 'West', 15: 'West', 41: 'West', 53: 'West'
+}
+
+# Prepare state-to-region DataFrame
+region_data = pd.DataFrame([
+    {"id": fips, "region": region} for fips, region in state_region_mapping.items()
+])
+
+# Load US states GeoJSON
+states = alt.topo_feature(data.us_10m.url, "states")
+```
+
+
+```{python}
+# Updated chart with a descriptive title
+region_map = alt.Chart(states).mark_geoshape().transform_lookup(
+    lookup='id',
+    from_=alt.LookupData(region_data, key='id', fields=['region'])
+).transform_lookup(
+    lookup='region',
+    from_=alt.LookupData(df, key='region', fields=[
+                         'any_household_energy_insecurity', 'total_cap_dc_region'])
+).encode(
+    color=alt.Color(
+        'any_household_energy_insecurity:Q',
+        scale=alt.Scale(scheme="reds"),
+        title="Energy Insecurity (Millions of housing units)",
+        legend=alt.Legend(
+            labelFontSize=10,
+            titleFontSize=12,
+            orient="right",
+            direction="vertical",
+            titleLimit=300
+        )
+    ),
+    tooltip=[
+        alt.Tooltip('region:N', title="Region"),
+        alt.Tooltip('any_household_energy_insecurity:Q',
+                    title="Energy Insecurity (Millions of housing units)", format=".2f"),
+        alt.Tooltip('total_cap_dc_region:Q', title="DC Capacity", format=".1f")
+    ]
+).project(
+    type='albersUsa'
+).properties(
+    width=800,
+    height=500,
+    title={
+        "text": "Energy Insecurity and DC Capacity Across US Regions",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "anchor": "middle",  # Center the title
+        "dy": -10            # Adjust the vertical position of the title
+    }
+)
+
+# Manually specify approximate region centroids (Longitude, Latitude)
+region_centroids = {
+    "Northeast": {"lon": -73, "lat": 43},   # Northeast
+    "Midwest": {"lon": -90, "lat": 41},     # Midwest
+    "South": {"lon": -86, "lat": 34},       # South
+    "West": {"lon": -115, "lat": 38}        # West
+}
+
+# Convert centroids to a DataFrame
+centroids_df = pd.DataFrame([{"region": region, "lon": coords["lon"],
+                            "lat": coords["lat"]} for region, coords in region_centroids.items()])
+
+# Merge centroids with the existing dataset
+df_with_centroids = pd.merge(df, centroids_df, on="region", how="left")
+
+# Add Region Labels to the Map
+region_labels = alt.Chart(df_with_centroids).mark_text(
+    fontSize=12,
+    fontWeight="bold",
+    color="white",
+    align="center"
+).encode(
+    longitude='lon:Q',
+    latitude='lat:Q',
+    text='region:N'
+)
+
+# Combine the Base Map and Region Labels without including conflicting config attributes
+final_chart = region_map + region_labels
+
+# Display the chart
+final_chart.display()
+
+```
+
+
+```{python}
+# Plot 2
+
+import pandas as pd
+import altair as alt
+from vega_datasets import data
+import json
+from altair_saver import save
+
+# Read the CSV file
+df = pd.read_excel(r"C:\Users\eddie\OneDrive\Documents\GitHub\final_project\hc_and_pv.xlsx")
+```
+
+```{python}
+# Filter for division rows (exclude nulls)
+division_df = df[df['division'].notna()].copy()
+
+division_chart = alt.Chart(division_df).mark_point(
+    size=200,  # Make points larger
+    filled=True,  # Fill the points
+    opacity=0.7  # Add some transparency
+).encode(
+    x=alt.X(
+        'total_cap_ac_division:Q',
+        title='Total AC Capacity (in megawatts)',
+        scale=alt.Scale(zero=False, padding=50)  # Add padding to x-axis
+    ),
+    y=alt.Y(
+        'any_household_energy_insecurity:Q',
+        title='Energy Insecurity (Millions of housing units)',
+        scale=alt.Scale(zero=False, padding=50)  # Add padding to y-axis
+    ),
+    color=alt.Color(
+        'division:N',
+        title='Division',
+        scale=alt.Scale(scheme='tableau10')  # Use a color scheme for divisions
+    ),
+    tooltip=[
+        alt.Tooltip('division:N', title='Division'),
+        alt.Tooltip('total_cap_ac_division:Q', title='AC Capacity', format='.2f'),
+        alt.Tooltip('any_household_energy_insecurity:Q', title='Energy Insecurity (Millions of housing units)', format='.2f')
+    ]
+).properties(
+    width=800,  # Make chart wider
+    height=500,  # Make chart taller
+    title='Total AC Capacity vs Energy Insecurity by Division (megawatts)'
+).interactive()
+
+division_chart
+
+```
+
+
+```{python}
+division_chart.save('plot2.png')
+```
+
+```{python}
+# Shiny App Code
+from shiny import App, render, ui
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+from vega_datasets import data  
+
+# Load US states GeoJSON using Geopandas
+states = gpd.read_file(data.us_10m.url, layer="states")
+states["id"] = states["id"].astype(int)
+
+# Load the data file
+df_1 = pd.read_csv(r"C:/Users/prash/Downloads/pv_data_regions_divisions.csv")
+
+# Ensure longitude and latitude are correct and numeric
+df_1["xlong"] = pd.to_numeric(df_1["xlong"], errors="coerce")
+df_1["ylat"] = pd.to_numeric(df_1["ylat"], errors="coerce")
+
+# Round longitude and latitude to avoid mismatches
+df_1["xlong_1"] = df_1["xlong"].round(4)
+df_1["ylat_1"] = df_1["ylat"].round(4)
+
+# State-to-region mapping (FIPS codes)
+state_region_mapping = {
+    23: "Northeast", 25: "Northeast", 33: "Northeast", 44: "Northeast", 50: "Northeast", 9: "Northeast",
+    34: "Northeast", 36: "Northeast", 42: "Northeast", 17: "Midwest", 18: "Midwest", 26: "Midwest", 39: "Midwest", 
+    55: "Midwest", 19: "Midwest", 20: "Midwest", 27: "Midwest", 29: "Midwest", 31: "Midwest", 38: "Midwest", 46: "Midwest",
+    1: "South", 5: "South", 10: "South", 12: "South", 13: "South", 21: "South", 22: "South", 24: "South", 28: "South", 
+    37: "South", 40: "South", 45: "South", 47: "South", 48: "South", 51: "South", 54: "South", 4: "West", 8: "West", 
+    16: "West", 30: "West", 32: "West", 35: "West", 49: "West", 56: "West", 2: "West", 6: "West", 15: "West", 41: "West", 
+    53: "West",
+}
+
+# Create DataFrame from state_region_mapping
+region_data = pd.DataFrame(
+    {"id": list(state_region_mapping.keys()), "region": list(state_region_mapping.values())}
+)
+
+# Ensure 'id' is integer
+region_data["id"] = region_data["id"].astype(int)
+
+# Merge states GeoDataFrame with region data
+states = states.merge(region_data, how="left", left_on="id", right_on="id")
+
+# Add DC capacity data
+data_dict = {
+    "region": ["Northeast", "Midwest", "South", "West"],
+    "total_cap_dc_region": [639.3, 687.3, 9848.64, 4006.8],
+}
+df = pd.DataFrame(data_dict)
+states = states.merge(df, how="left", left_on="region", right_on="region")
+
+# Set geometry column (necessary for GeoPandas)
+states = states.set_geometry("geometry")
+
+# List of regions for the dropdown, including "Full US"
+region_list = ["Full US"] + states["region"].dropna().unique().tolist()
+
+# Define the Shiny app UI
+app_ui = ui.page_fluid(
+    ui.panel_title("Power Capacity in AC (Megawatts) Across the US"),
+    ui.input_select("region", "Select Region:", region_list),
+    ui.input_slider("capacity_filter", "Filter by Power Capacity (MW)", min=0, max=600, step=10, value=[0, 600]),
+    ui.output_plot("my_plot"),
+)
+
+# Define the server logic
+def server(input, output, session):
+    @output
+    @render.plot
+    def my_plot():
+        selected_region = input.region()
+        capacity_range = input.capacity_filter()
+
+        # Plotting logic based on selected region
+        fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+
+        if selected_region == "Full US":
+            # Filter out Alaska (id 2) and Hawaii (id 15), but include Washington and Oregon
+            contiguous_states = states[~states["id"].isin([2, 15, 60, 69, 72, 78])]
+            contiguous_states.boundary.plot(ax=ax, linewidth=1, edgecolor="black")
+            filtered_points = df_1  # Use all points for the entire US
+            ax.set_title("Power Capacity in AC (Megawatts) Across the US")
+            ax.set_xlim(-125, -66)  # Set appropriate xlim for contiguous US
+            ax.set_ylim(24, 49)  # Set appropriate ylim for contiguous US
+        else:
+            # Handle filtering for the selected region
+            if selected_region == "West":
+                # Exclude only Alaska (id 2) and Hawaii (id 15), keep Washington and Oregon
+                filtered_states = states[(states["region"] == selected_region) & ~states["id"].isin([2, 15])]
+            else:
+                filtered_states = states[states["region"] == selected_region]
+
+            filtered_points = df_1[df_1["region"] == selected_region]
+            filtered_states.boundary.plot(ax=ax, linewidth=1, edgecolor="black")
+            ax.set_title(f"Power Capacity in AC (Megawatts) in {selected_region}")
+
+        # Filter points based on the capacity slider range
+        filtered_points = filtered_points[
+            (filtered_points["p_cap_ac"] >= capacity_range[0]) & (filtered_points["p_cap_ac"] <= capacity_range[1])
+        ]
+
+        # Scatterplot of the points
+        scatter = ax.scatter(
+            filtered_points["xlong_1"],
+            filtered_points["ylat_1"],
+            c=filtered_points["p_cap_ac"],  # Assuming this column holds the power capacity
+            cmap="viridis",
+            s=100,
+            alpha=0.6,
+            edgecolors="w",
+            vmin=0,  # consistent color scale
+            vmax=600  # consistent color scale
+        )
+
+        # Add a colorbar for the scatter plot
+        cbar = plt.colorbar(scatter, ax=ax)
+        cbar.set_label("Power Capacity in AC (Megawatts)")
+
+        # Customize the plot
+        ax.set_xlabel("Longitude")
+        ax.set_ylabel("Latitude")
+        ax.grid(True)
+        ax.set_axis_off()
+
+        return fig
+
+
+# Run the Shiny app
+app = App(app_ui, server)
+```
+
+
+## Solar Infrastructure versus Energy Insecurity across US Regions
+
+**Introduction**
+
+As climate change becomes more of an existential threat, a greater number of households worldwide will be affected by extreme weather shocks, food shortages, and displacement. However, efforts to mitigate climate change by reducing greenhouse gas emissions and switching to renewable energy sources such as solar also present a series of challenges. As solar energy becomes more of an imperative within the United States energy ecosystem, it’s important to better understand how this may impact household energy insecurity. We are particularly interested in knowing if a greater volume of high-capacity solar facilities within a region is indicative of how secure nearby households feel about their access to energy. 
+
+In an ideal setting, more developed solar facilities may generate positive spillovers within their surrounding communities, facilitating access to solar while boosting perceptions of solar energy’s efficiency. However, we may also imagine a concerning scenario where investment in renewable energy infrastructure is funneling resources away from current energy accessibility, especially for low-income households. By visualizing the landscape of US solar infrastructure and analyzing how it correlates with nearby households’ energy insecurity, we hope to gain a better understanding of how, if at all, these two variables are connected.
+
+**Data and Methods**
+
+
+For our analysis, we worked with two key datasets. The first came from the US Energy Information Administration (EIA), a government agency operating with the express goal of surveying the public and collecting energy information for use in policy analysis alongside research and development. Their 2020 Residential Energy Consumption Survey (RECS) gathered data on housing characteristics such as fuel
+consumption per household, air conditioning usage, and most importantly, energy insecurity. 
+
+Broadly, energy insecurity refers to a household’s inability to meet basic energy needs. The EIA measured this value as an index linked to whether households had to forgo food or medicine to pay energy costs, had to leave home due to the temperature of the residence, or did not have access to heating or cooling equipment. Data was then grouped both demographically (age and ethnicity) and by region of the country. This allowed us to compile a comprehensive list of energy insecurity rates across the United States. 
+
+Our second dataset came from the United States Geological Survey, a government agency focused on surveying natural resources and energy facilities. We used their geographic database on Solar Photovoltaic facilities, which compiled all major US solar production facilities by year, along with their production capacity, location, and starting date. These facilities are in charge of supplying solar power to the grid, making them pivotal components of solar infrastructure development in the US. For our analysis, we focused on each facility’s production capacity, serving as a proxy for their level of development. 
+
+After carefully reviewing our datasets, we dropped missing values and aggregated the Solar PV data by region and regional subdivisions, mimicking the structure of the RECS data. We then restructured the RECS data to have a separate column denoting region and division, allowing us to merge the data on region and division. After this merge, each row in our dataframe represented one solar photovoltaic facility, along with both its region and division, and the relevant energy insecurity index of that given location.
+
+**Results**
+
+We first produced data visualizations that allowed us to get a better understanding of the energy insecurity landscape across the US.
+
+![Plot 1](plot1.png)
+
+As we can see, energy insecurity appears to be far stronger in the South of the US. This may be due to weather conditions here such as greater humidity and increased susceptibility to heat waves. By contrast, the West has the lowest energy insecurity. The Northeast, the coldest region in the country, also displays an elevated level of energy insecurity. After having visualized the data, we moved on to producing a scatter plot that could help us answer our research question of interest: Is more solar power capacity a good indicator for how secure households near these plants felt about their energy? On the y-axis, we have the energy insecurity per millions of housing units within a particular region. On the x-axis is the cumulative AC capacity of all solar facilities within a given subregion:
+
+
+
+![Plot 2](plot2.png)
+
+We do not appear to observe any kind of strong correlation between these two variables, which we believe is an interesting finding in and of itself. We will discuss this further within the conclusion section. Lastly, our shiny app allows us to zoom in on solar infrastructure within any region of interest in the country. Our slider allows us to filter by solar capacity, meaning we can isolate particularly high or low-performing plants in a given area. There is also the option to view the full US map at once.
+
+**Discussion and Conclusion**
+
+By seeing no correlation, the data seems to suggest that solar facility capacity is not a good predictor of energy insecurity, and that the above hypotheses may not be playing out as anticipated. This may be the case because of how far away these facilities are from residential areas, or may even be a sign that higher local expenditure in solar energy facilities is uncorrelated with higher expenditure on average household energy consumption. 
+
+It may also be the case that regions across the US vary too much regarding weather conditions for solar energy provision to make any meaningful difference. For example, extreme heat waves in Texas or cold in Illinois may be issues that require more impactful weatherization efforts like repairing HVAC or sealing windows to alleviate.
+
+The data analysis is indicative that more research ought to be done into the factors that influence energy insecurity. With renewables as the future of energy, we need to ensure their development is not leaving households behind. If we can find a way to pair renewable energy development with greater energy security for households, this may reinforce the importance of these sources of energy within the current ecosystem. If we were to run this analysis again, it may be interesting to observe how weatherization assistance programs may affect energy insecurity, although publicly available quantitative data is limited. 
+
+We believe the greatest strength of our project lies in our map visualizations. These provide an easily accessible landscape for both energy insecurity and solar PV capacity, which could allow policymakers to more easily visualize which regions are most or least developed when it comes to renewable energy infrastructure.
