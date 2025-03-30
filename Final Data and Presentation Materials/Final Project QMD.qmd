@@ -20,12 +20,12 @@ import numpy as np
 import os
 
 # Set directory paths
-dir_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
+dir_path = r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data"
 output_dir = dir_path
 
 # Step 1: Load energy insecurity and solar PV datasets
 energy_insecurity_df = pd.read_excel(os.path.join(dir_path, "HC 11.1.xlsx"))
-solar_pv_df = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\uspvdbCSV\uspvdb_v2_0_20240801.csv")
+solar_pv_df = pd.read_csv(r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data\uspvdb_v2_0_20240801.csv")
 
 
 # Step 2: Clean and prepare solar PV dataset
@@ -117,7 +117,7 @@ print("- hc_and_pv.xlsx")
 import pandas as pd
 
 # Read the Excel file
-file_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project\HC_11.1_with_PV_data.xlsx"
+file_path = r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data\HC_11.1_with_PV_data.xlsx"
 df = pd.read_excel(file_path)
 
 # Convert column names to lowercase and replace spaces with underscores
@@ -135,7 +135,7 @@ print("Column names have been updated and the file has been saved.")
 # Data merging:
 
 # Set the directory path
-dir_path = r"C:\Users\clari\OneDrive\Documents\Python II\final_project"
+dir_path = r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data"
 
 # Load the Excel file
 excel_file = os.path.join(dir_path, 'HC_11.1_cleaned.xlsx')
@@ -186,7 +186,7 @@ import json
 # Load US states/divisions topology
 states = alt.topo_feature(data.us_10m.url, 'states')
 # Read the CSV file
-df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\Python II\final_project\hc_and_pv.xlsx")
+df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data\hc_and_pv.xlsx")
 ```
 
 ```{python}
@@ -308,7 +308,7 @@ import json
 from altair_saver import save
 
 # Read the CSV file
-df = pd.read_excel(r"C:\Users\eddie\OneDrive\Documents\GitHub\final_project\hc_and_pv.xlsx")
+df = pd.read_excel(r"C:\Users\clari\OneDrive\Documents\GitHub\Python II\final_project\Data\hc_and_pv.xlsx")
 ```
 
 ```{python}
@@ -368,7 +368,7 @@ states = gpd.read_file(data.us_10m.url, layer="states")
 states["id"] = states["id"].astype(int)
 
 # Load the data file
-df_1 = pd.read_csv(r"C:/Users/prash/Downloads/pv_data_regions_divisions.csv")
+df_1 = pd.read_csv(r"C:\Users\eddie\OneDrive\Documents\GitHub\final_project\Data\pv_data_regions_divisions.csv")
 
 # Ensure longitude and latitude are correct and numeric
 df_1["xlong"] = pd.to_numeric(df_1["xlong"], errors="coerce")
